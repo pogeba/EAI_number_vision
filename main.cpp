@@ -36,7 +36,7 @@ double lastTime = 0;
 float position_y;
 float RD;
 int delay_time;
-//int car_speed;
+
 double last_position_err = 0;
 int pid_count;
 bool finishedTurn = false;
