@@ -64,7 +64,7 @@ void Dector::mediaStream(VideoCapture capture, int delay){
     uchar count = 0;
     double totalTime = 0;
     while (true){
-        Mat frame, thresholded;
+        Mat frame, thresholded,last_picture;
 //        capture >> frame;//读出每一帧的图像
 	bool res = capture.read(frame);
 	if(!res) {
@@ -92,7 +92,14 @@ void Dector::mediaStream(VideoCapture capture, int delay){
 
         clock_t start = clock();
 
-        imageProcess(srcROI, thresholded);
+        imageProcess(srcROI, thresholded,last_picture);
+
+//        string Img_Name10 = "/home/xcy/picture_number/10/" +to_string(k)+".png";
+  //      imwrite(Img_Name10,frame);
+   //     string Img_Name11 = "/home/xcy/picture_number/11/" +to_string(k)+".png";
+    //    imwrite(Img_Name11,thresholded);
+     //   k++;
+
 
         if(debug){
             totalTime += (clock() - start);
@@ -123,14 +130,16 @@ void Dector::imageTest(string fileName) {
     Mat frame = imread(fileName);
     Mat srcROI(frame, Rect(320, 80, 640, 640));
     Mat thresholded;
+    Mat last_picture;
 
     clock_t start = clock();
 
-    imageProcess(srcROI, thresholded);
+    imageProcess(srcROI, thresholded,last_picture);
 
     cout << "precessed time:" << (double)(clock() - start)/CLOCKS_PER_SEC << endl;
     cout << "fileName:" << fileName << endl;
     cout << endl;
+
 
     imshow(" after", thresholded);
     moveWindow(" after", 900, 0);
@@ -140,7 +149,7 @@ void Dector::imageTest(string fileName) {
     waitKey(0);
 }
 
-void Dector::imageProcess(Mat& frame, Mat& thresholded){
+void Dector::imageProcess(Mat& frame, Mat& thresholded,Mat& last_picture){
     Mat gary;
     Mat test1;
     Mat dst1;
@@ -168,94 +177,174 @@ void Dector::imageProcess(Mat& frame, Mat& thresholded){
     clock_t start3 = clock();
     if(points.size() >= 6 && isValidPoint(points[3]) && isValidPoint(points[4]) && isValidPoint(points[5])) {
         errorMeasure(points, frame);
-        int ROI1_x=abs(points[3].x + 20);
-        int ROI1_y=abs(points[3].y+1);
-        int ROI2_x=abs(points[5].x + 30);
-        int ROI2_y=abs(points[5].y + 15);
-        int ROI3_x=abs(points[1].x+1);
-        int ROI3_y=abs(points[1].y + 20);
+//        int ROI1_x=abs(points[3].x + 20);
+//        int ROI1_y=abs(points[3].y+1);
+//        int ROI2_x=abs(points[5].x + 30);
+//        int ROI2_y=abs(points[5].y + 15);
+//        int ROI3_x=abs(points[1].x+1);
+//        int ROI3_y=abs(points[1].y + 20);
 
-        int ROI1_width=abs(points[2].x - points[3].x -20)+1;
-        int ROI1_height= abs(points[2].y -15 - points[3].y)+1;
-        int ROI2_width=abs(points[2].x - points[5].x -20)+1;
-        int ROI2_height= abs(points[4].y -5- points[5].y)+1;
-        int ROI3_width=abs(points[4].x - points[1].x -20)+1;
-        int ROI3_height= abs(points[4].y -10 - points[1].y)+1;
+//        int ROI1_width=abs(points[2].x - points[3].x -20)+1;
+//        int ROI1_height= abs(points[2].y -15 - points[3].y)+1;
+//        int ROI2_width=abs(points[2].x - points[5].x -20)+1;
+//        int ROI2_height= abs(points[4].y -5- points[5].y)+1;
+//        int ROI3_width=abs(points[4].x - points[1].x -20)+1;
+//        int ROI3_height= abs(points[4].y -10 - points[1].y)+1;
 
-        if((ROI1_x+ROI1_width)>(frame.cols -1))
-        {
-            ROI1_x=frame.cols -(ROI1_width + 1);
+//        if((ROI1_x+ROI1_width)>(frame.cols -1))
+//        {
+//            ROI1_x=frame.cols -(ROI1_width + 1);
+//        }
+//        if((ROI1_y+ROI1_height)>(frame.rows -1))
+//        {
+//            ROI1_y=frame.rows -(ROI1_height + 1);
+//        }
+//        if((ROI2_x+ROI2_width)>(frame.cols -1))
+//        {
+//            ROI2_x=frame.cols -(ROI2_width + 1);
+//        }
+//        if((ROI2_y+ROI2_height)>(frame.rows -1))
+//        {
+//            ROI2_y=frame.rows -(ROI2_height + 1);
+//        }
+//        if((ROI3_x+ROI3_width)>(frame.cols -1))
+//        {
+//            ROI3_x=frame.cols -(ROI3_width + 1);
+//        }
+//        if((ROI3_y+ROI3_height)>(frame.rows -1))
+//        {
+//            ROI3_y=frame.rows -(ROI3_height + 1);
+//        }
+
+
+//        Mat srcROI1(frame, Rect(ROI1_x, ROI1_y, ROI1_width, ROI1_height));
+//        Mat srcROI2(frame, Rect(ROI2_x, ROI2_y, ROI2_width, ROI2_height));
+//        Mat srcROI3(frame, Rect(ROI3_x , ROI3_y, ROI3_width, ROI3_height));
+//        test1 = srcROI1;
+//        test2 = srcROI2;
+//        test3 = srcROI3;
+
+//        resize(test1, test1, Size(imageRow, imageCol), INTER_AREA);
+//        resize(test2, test2, Size(imageRow, imageCol), INTER_AREA);
+//        resize(test3, test3, Size(imageRow, imageCol), INTER_AREA);
+//        cvtColor(test1, gray1, CV_RGB2GRAY);
+//        cvtColor(test2, gray2, CV_RGB2GRAY);
+//        cvtColor(test3, gray3, CV_RGB2GRAY);
+//        threshold(gray1, test1, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+//        threshold(gray2, test2, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+//        threshold(gray3, test3, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+//        string Img_Name = "/home/wangjin/picture_number/9/" +to_string(k)+".png";
+//     //   bitwise_not(test, test);
+//     //   imwrite(Img_Name,test3);
+//     //   k++;
+//        Mat_<float> testMat1(1, imageRow*imageCol);
+//        Mat_<float> testMat2(1, imageRow*imageCol);
+//        Mat_<float> testMat3(1, imageRow*imageCol);
+//        for (int i = 0; i < imageRow*imageCol; i++)
+//        {
+//            testMat1.at<float>(0, i) = (float)test1.at<uchar>(i / 8, i % 8);
+//            testMat2.at<float>(0, i) = (float)test2.at<uchar>(i / 8, i % 8);
+//            testMat3.at<float>(0, i) = (float)test3.at<uchar>(i / 8, i % 8);
+//         //   cout<<testMat1.at<float>(0,i)<<endl;
+//        }
+//        model->predict(testMat1, dst1);
+//        model->predict(testMat2, dst2);
+//        model->predict(testMat3, dst3);
+
+
+//        minMaxLoc(dst1, NULL, &maxVal1, NULL, &maxLoc1);
+//        minMaxLoc(dst2, NULL, &maxVal2, NULL, &maxLoc2);
+//        minMaxLoc(dst3, NULL, &maxVal3, NULL, &maxLoc3);
+//        std::cout << "测试结果：" << maxLoc1.x << "置信度:" << maxVal1 * 100 << "%" << std::endl;
+//        std::cout << "测试结果：" << maxLoc2.x << "置信度:" << maxVal2 * 100 << "%" << std::endl;
+//        std::cout << "测试结果：" << maxLoc3.x << "置信度:" << maxVal3 * 100 << "%" << std::endl;
+
+//    //    myPutText(to_string(maxLoc1.x), frame, 120, 370);
+//    //    myPutText(to_string(maxLoc2.x), frame, 220, 370);
+//    //    myPutText(to_string(maxLoc3.x), frame, 420, 370);
+//        rectangle(frame, cvPoint(points[3].x + 20,points[3].y), cvPoint(points[2].x,points[2].y -15), Scalar(255, 0, 255), 1, 1, 0);
+//        rectangle(frame, cvPoint(points[1].x,points[1].y+20), cvPoint(points[4].x - 20,points[4].y +10), Scalar(125, 0, 255), 1, 1, 0);
+//        rectangle(frame, cvPoint(points[5].x + 30,points[5].y + 15),cvPoint(points[2].x+10,points[4].y+10),Scalar(0,255,200),1,1,0);
+
+        vector<Point2f> pts_src;             //拍摄图像中导航点的坐标
+        pts_src.push_back(points[1]);
+        pts_src.push_back(points[2]);
+        pts_src.push_back(points[3]);
+        pts_src.push_back(points[4]);
+
+        vector<Point2f> pts_dst;              //校正后图像中导航点的坐标
+        pts_dst.push_back(Point2f(35, 195));
+        pts_dst.push_back(Point2f(355, 195));
+        pts_dst.push_back(Point2f(195, 35));
+        pts_dst.push_back(Point2f(195, 355));
+
+//        Mat h = findHomography(pts_src, pts_dst);  //找出单应性矩阵
+        Mat h = cv::getPerspectiveTransform(pts_dst, pts_src);
+        warpPerspective(thresholded, last_picture, h, cv::Size(395, 395), cv::INTER_LINEAR | cv::WARP_INVERSE_MAP);
+        if(debug){
+        imshow("perspective image", last_picture);
+        moveWindow("last_picture", 0, 0);
         }
-        if((ROI1_y+ROI1_height)>(frame.rows -1))
-        {
-            ROI1_y=frame.rows -(ROI1_height + 1);
-        }
-        if((ROI2_x+ROI2_width)>(frame.cols -1))
-        {
-            ROI2_x=frame.cols -(ROI2_width + 1);
-        }
-        if((ROI2_y+ROI2_height)>(frame.rows -1))
-        {
-            ROI2_y=frame.rows -(ROI2_height + 1);
-        }
-        if((ROI3_x+ROI3_width)>(frame.cols -1))
-        {
-            ROI3_x=frame.cols -(ROI3_width + 1);
-        }
-        if((ROI3_y+ROI3_height)>(frame.rows -1))
-        {
-            ROI3_y=frame.rows -(ROI3_height + 1);
-        }
+    Mat srcROI1(last_picture, Rect(246,37, 94, 120));
+//    Mat srcROI1(last_picture, Rect(246,39, 94, 120));
+    Mat srcROI2(last_picture, Rect(246, 231, 94, 120));
+    Mat srcROI3(last_picture, Rect(56, 231, 94, 120));
+    test1 = srcROI1;
+    test2 = srcROI2;
+    test3 = srcROI3;
+
+    resize(test1, test1, Size(imageRow, imageCol), INTER_AREA);
+    resize(test2, test2, Size(imageRow, imageCol), INTER_AREA);
+    resize(test3, test3, Size(imageRow, imageCol), INTER_AREA);
+    string Img_Name0 = "/home/xcy/picture_number/0/" +to_string(k)+".png";
+    string Img_Name1 = "/home/xcy/picture_number/1/" +to_string(k)+".png";
+    string Img_Name2 = "/home/xcy/picture_number/2/" +to_string(k)+".png";
+    string Img_Name3 = "/home/xcy/picture_number/3/" +to_string(k)+".png";
+    string Img_Name4 = "/home/xcy/picture_number/4/" +to_string(k)+".png";
+    string Img_Name5 = "/home/xcy/picture_number/5/" +to_string(k)+".png";
+    string Img_Name6 = "/home/xcy/picture_number/6/" +to_string(k)+".png";
+    string Img_Name7 = "/home/xcy/picture_number/7/" +to_string(k)+".png";
+    string Img_Name8 = "/home/xcy/picture_number/8/" +to_string(k)+".png";
+    string Img_Name9 = "/home/xcy/picture_number/9/" +to_string(k)+".png";
+//    imwrite(Img_Name1,test1);
+ //   imwrite(Img_Name4,test2);
+//    imwrite(Img_Name3,test3);
+//    k++;
+    Mat_<float> testMat1(1, imageRow*imageCol);
+    Mat_<float> testMat2(1, imageRow*imageCol);
+    Mat_<float> testMat3(1, imageRow*imageCol);
+    for (int i = 0; i < imageRow*imageCol; i++)
+    {
+        testMat1.at<float>(0, i) = (float)test1.at<uchar>(i / 12, i % 12);
+        testMat2.at<float>(0, i) = (float)test2.at<uchar>(i / 12, i % 12);
+        testMat3.at<float>(0, i) = (float)test3.at<uchar>(i / 12, i % 12);
+    }
+    model->predict(testMat1, dst1);
+    model->predict(testMat2, dst2);
+    model->predict(testMat3, dst3);
 
 
-        Mat srcROI1(frame, Rect(ROI1_x, ROI1_y, ROI1_width, ROI1_height));
-        Mat srcROI2(frame, Rect(ROI2_x, ROI2_y, ROI2_width, ROI2_height));
-        Mat srcROI3(frame, Rect(ROI3_x , ROI3_y, ROI3_width, ROI3_height));
-        test1 = srcROI1;
-        test2 = srcROI2;
-        test3 = srcROI3;
-
-        resize(test1, test1, Size(imageRow, imageCol), INTER_AREA);
-        resize(test2, test2, Size(imageRow, imageCol), INTER_AREA);
-        resize(test3, test3, Size(imageRow, imageCol), INTER_AREA);
-        cvtColor(test1, gray1, CV_RGB2GRAY);
-        cvtColor(test2, gray2, CV_RGB2GRAY);
-        cvtColor(test3, gray3, CV_RGB2GRAY);
-        threshold(gray1, test1, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-        threshold(gray2, test2, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-        threshold(gray3, test3, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-        string Img_Name = "/home/wangjin/picture_number/9/" +to_string(k)+".png";
-     //   bitwise_not(test, test);
-     //   imwrite(Img_Name,test3);
-     //   k++;
-        Mat_<float> testMat1(1, imageRow*imageCol);
-        Mat_<float> testMat2(1, imageRow*imageCol);
-        Mat_<float> testMat3(1, imageRow*imageCol);
-        for (int i = 0; i < imageRow*imageCol; i++)
-        {
-            testMat1.at<float>(0, i) = (float)test1.at<uchar>(i / 8, i % 8);
-            testMat2.at<float>(0, i) = (float)test2.at<uchar>(i / 8, i % 8);
-            testMat3.at<float>(0, i) = (float)test3.at<uchar>(i / 8, i % 8);
-         //   cout<<testMat1.at<float>(0,i)<<endl;
-        }
-        model->predict(testMat1, dst1);
-        model->predict(testMat2, dst2);
-        model->predict(testMat3, dst3);
+    minMaxLoc(dst1, NULL, &maxVal1, NULL, &maxLoc1);
+    minMaxLoc(dst2, NULL, &maxVal2, NULL, &maxLoc2);
+    minMaxLoc(dst3, NULL, &maxVal3, NULL, &maxLoc3);
+//    std::cout << "测试结果：" << maxLoc1.x << "置信度:" << maxVal1 * 100 << "%" << std::endl;
+//    if(abs(maxVal1)<0.1){
+//        maxLoc1.x=NULL;
+//    }
+//    if(abs(maxVal2)<0.1){
+//        maxLoc2.x=NULL;
+//    }
+//    if(abs(maxVal3)<0.1){
+//        maxLoc3.x=NULL;
+//    }
+//    std::cout << "测试结果：" << maxLoc2.x << "置信度:" << maxVal2 * 100 << "%" << std::endl;
+//    std::cout << "测试结果：" << maxLoc3.x << "置信度:" << maxVal3 * 100 << "%" << std::endl;
 
 
-        minMaxLoc(dst1, NULL, &maxVal1, NULL, &maxLoc1);
-        minMaxLoc(dst2, NULL, &maxVal2, NULL, &maxLoc2);
-        minMaxLoc(dst3, NULL, &maxVal3, NULL, &maxLoc3);
-        std::cout << "测试结果：" << maxLoc1.x << "置信度:" << maxVal1 * 100 << "%" << std::endl;
-        std::cout << "测试结果：" << maxLoc2.x << "置信度:" << maxVal2 * 100 << "%" << std::endl;
-        std::cout << "测试结果：" << maxLoc3.x << "置信度:" << maxVal3 * 100 << "%" << std::endl;
+    rectangle(frame, cvPoint(points[3].x + 20,points[3].y), cvPoint(points[2].x,points[2].y -15), Scalar(255, 0, 255), 1, 1, 0);
+    rectangle(frame, cvPoint(points[1].x,points[1].y+20), cvPoint(points[4].x - 20,points[4].y +10), Scalar(125, 0, 255), 1, 1, 0);
+    rectangle(frame, cvPoint(points[5].x + 30,points[5].y + 15),cvPoint(points[2].x+10,points[4].y+10),Scalar(0,255,200),1,1,0);
 
-    //    myPutText(to_string(maxLoc1.x), frame, 120, 370);
-    //    myPutText(to_string(maxLoc2.x), frame, 220, 370);
-    //    myPutText(to_string(maxLoc3.x), frame, 420, 370);
-        rectangle(frame, cvPoint(points[3].x + 20,points[3].y), cvPoint(points[2].x,points[2].y -15), Scalar(255, 0, 255), 1, 1, 0);
-        rectangle(frame, cvPoint(points[1].x,points[1].y+20), cvPoint(points[4].x - 20,points[4].y +10), Scalar(125, 0, 255), 1, 1, 0);
-        rectangle(frame, cvPoint(points[5].x + 30,points[5].y + 15),cvPoint(points[2].x+10,points[4].y+10),Scalar(0,255,200),1,1,0);
     } else {
 	position_err = 0;
     }
@@ -282,20 +371,29 @@ void Dector::imageProcess(Mat& frame, Mat& thresholded){
 
         clock_t start4 = clock();
         vector<Point> encodePoints;
-      //  int value = decodeImage(thresholded, points, encodePoints);
+      //  int value = decodeImage(thresholded, points, encodePoints);  
+        if(abs(maxVal1)<0.85 || abs(maxVal2)<0.85 || abs(maxVal3)<0.85){
+               maxLoc1.x=0;
+               maxLoc2.x=0;
+               maxLoc3.x=0;
+           }
         int value=abs(100*maxLoc1.x + 10*maxLoc2.x + maxLoc3.x);
+        
+        if(debug) {
         myPutText(to_string(value), frame, 120, 370);
-        if(!stopDecode && value > 0 && centre_y > imageRows/4) {
+        }
+        if(!stopDecode && value > 0 && centre_y > imageRows*7/12) {
             last_decode_value = decode_value;
             decode_value = value;
         
             if(!stopDecode && decode_value != last_decode_value){
-                if(decode_value == 465 || decode_value == 789 || decode_value == 229 || decode_value == 289
+                if(decode_value == 424 || decode_value == 544 || decode_value == 243 || decode_value == 474
 			   || decode_value == routeNodes[nodeIndex] || decode_value == stopNum) {
                     readyToTurn = true;
 		    if(decode_value == stopNum){
 		        stopDecode = true;
 		    }
+                stopDecode=true;
                     cout << "decode_value:" << decode_value << " ready to turn!" << endl;
                  } else {
                     cout << "decode_value:" << decode_value << endl;

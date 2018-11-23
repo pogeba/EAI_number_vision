@@ -80,7 +80,7 @@ public:
     int imageRows = 0;
     int roiCols = 640;
     int roiRows = 720;
-    const int imageRow = 8;
+    const int imageRow = 12;
     const int imageCol = 16;
     int k=0;
     double maxVal1 = 0;
@@ -90,12 +90,12 @@ public:
     Point maxLoc2;
     Point maxLoc3;
     Dector();
-    Ptr<ANN_MLP> model = StatModel::load<ANN_MLP>("/home/xcy/image/MLPModel.xml");
+    Ptr<ANN_MLP> model = StatModel::load<ANN_MLP>("/home/xcy/image/MLPModel2.xml");
     void cameraTest(int clnt);
     void videoTest(string, int clnt);
     void mediaStream(VideoCapture capture, int delay);
     void imageTest(string);
-    void imageProcess(Mat &frame, Mat &thresholded);
+    void imageProcess(Mat &frame, Mat &thresholded,Mat& last_picture);
     vector<Point> scanImageEfficiet(Mat&);
     void analyseLines(vector<Line>&lines, vector<Kernel>&, uchar*);
     vector<Point> analyseKernels(vector<Kernel> &);

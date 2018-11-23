@@ -212,11 +212,11 @@ void MotroCarControl(){
 
         if(dector.readyToTurn) {
             if(dector.centre_y > dector.imageRows*2/3){
-                turn(620000, dector.command[dector.nodeIndex]);
+                turn(520000, dector.command[dector.nodeIndex]);
                 dector.nodeIndex++;
                 dector.readyToTurn = false;
             } else if(dector.centre_y > dector.imageRows/2){
-                turn(640000, dector.command[dector.nodeIndex]);
+                turn(600000, dector.command[dector.nodeIndex]);
                 dector.nodeIndex++;
                 dector.readyToTurn = false;
             } else if(dector.centre_y > dector.imageRows/3){
@@ -314,6 +314,7 @@ void turn(int time, int type){//4:turnRight 3:turnLeft 1:farword 5:stop
     sLock.unlock();
 
 //    usleep(1000000);
+    dector.stopDecode=false;
     stopPid = false;
     finishedTurn = true;
     turned = true;
@@ -371,8 +372,8 @@ void PIDControl(){
     D_value = 0 - MAX_D_VALUE;
     }
 
-    int left_value = speed - D_value/8;
-    int right_value = speed + D_value/8;
+    int left_value = speed - D_value/9;
+    int right_value = speed + D_value/9;
 //    int left_value = 10;
 //    int right_value = -10
 //    char send_buf7[11]="z 10 -10;\r";
@@ -383,7 +384,7 @@ void PIDControl(){
     send_buf[5] = 48 + right_value/10;
     send_buf[6] = 48 + (right_value - (send_buf[5] - 48)*10);
     if(send_buf[2]<= 49 ||send_buf[5]<=49){
-        cout<< "one motor dose not work"<<endl;
+   //     cout<< "one motor dose not work"<<endl;
     }
     if(UART_Send(fd,send_buf,9) <= 0){
         printf("send data failed!\n");
